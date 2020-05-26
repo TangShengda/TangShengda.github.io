@@ -3,12 +3,12 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: 小简单灬的博客
+title: Hexo
 subtitle: ''
 description: ''
 keywords:
-author: 小简单灬
-language: zh-Hans
+author: John Doe
+language: en
 timezone: ''
 
 # URL
@@ -18,7 +18,8 @@ root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
-  trailing_index: true # Set to false to remove trailing index.html from permalinks
+  trailing_index: true # Set to false to remove trailing 'index.html' from permalinks
+  trailing_html: true # Set to false to remove trailing '.html' from permalinks
 
 # Directory
 source_dir: source
@@ -48,6 +49,8 @@ highlight:
   line_number: true
   auto_detect: false
   tab_replace: ''
+  wrap: true
+  hljs: false
 
 # Home page setting
 # path: Root path for your blogs index page. (default = '')
@@ -90,11 +93,9 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: next
+theme: landscape
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
-  type: git
-  repository: https://github.com/TangShengda/TangShengda.github.io.git
-  branch: master
+  type: ''
