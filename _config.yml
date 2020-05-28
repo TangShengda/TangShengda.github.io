@@ -3,12 +3,12 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
-subtitle: ''
+title: 小简单灬的博客
+subtitle: '一起加油，一路同行'
 description: ''
-keywords:
-author: John Doe
-language: en
+keywords: 前端 技术 博客
+author: Tony Tang
+language: zh-Hans
 timezone: ''
 
 # URL
