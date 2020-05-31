@@ -33,3 +33,90 @@ window.addEventListener就是一个典型的例子。
 ## 实现一个简单的发布订阅模式
 
 除了内置的DOM事件，我们还会经常实现一些自定义的事件，这种依靠自定义事件完成的发布-订阅模式可以用于任何js的代码中。现在来实现一个简单的发布订阅模式。
+
+- 首先需要一个发布者对象
+- 发布者需要维护一个缓存队列，用于存放订阅对象的订阅回调
+- 订阅者可以向事件列表中添加一个事件 表示订阅
+- 发布消息时 遍历事件列表 去执行所有事件
+
+```
+  class CustomEvent {
+    private clientList = [] // 回调列表
+
+    constructor() {
+      
+    }
+
+    // 订阅通知
+    listen(fn: () => void) {
+      this.clientList.push(fn)
+    }
+
+    // 发送通知
+    trigger(...args) {
+      this.clientList.forEach(fn => fn(args))
+    }
+  }
+```
+
+但是，上面的代码有一个问题，没有区分订阅的事件类型,并且没有取消订阅的功能
+
+## 发布订阅的通用实现
+
+
+```
+  class CustomEvent {
+    private clientList = {}
+
+    constructor() {
+
+    }
+
+    // 订阅通知
+    addListener(type: string, fn: (...args: any) => void) {
+      if (!this.clientList[type]) {
+        this.clientList[type] = []
+      }
+      this.clientList[type].push(fn)
+    }
+
+    // 取消订阅
+    removeListener(type) {
+      if(!type){
+        this.clientList = {}
+      }
+      this.clientList[type] = []
+    }
+
+    // 发送通知
+    trigger(type, ...args) {
+      const fns = this.clientList[type]
+      if (!fns || fns.length <= 0) {
+        return
+      }
+      fns.forEach(fn => {
+        fn.apply(this, args)
+      });
+    }
+  }
+```
+
+## 小结
+
+发布订阅者模式在实际开发中非常有用。
+
+发布订阅的优点非常明显，一是时间上的解耦，而是对象间的解耦。
+
+- 时间上的解耦: 在异步编程中，由于无法确定异步加载的时间，有可能订阅事件的模块还没有初始化完毕而异步加载就完成了，发布者就已经发布事件了。通过发布订阅模式，可以将发布者的事件提前保存起来，等到发布者加载完毕再执行。
+- 对象间的解耦：发布订阅模式中，发布者和订阅者可以不必知道对方的存在，而是通过中介对象来通信。
+
+发布订阅模式还可以用来帮助实现一些别的设计模式，比如中介者模式。从架构上看，无论是MVC还是MVVM，都少不了发布订阅模式的参与，而且js语言本身也是一门基于事件驱动的语言。
+
+当然，发布订阅模式也不是没有缺点。
+
+- 创建订阅者本身需要一定的时间和内存，而当你订阅一个消息后，也许此消息最后都未发生，但这个订阅者会始终存在于内存中。
+- 另外，发布订阅模式将对象间完全解耦，如果过度使用的话，对象和对象之间的必要联系就会被掩盖，会导致程序难以追踪和理解。
+
+## 参考文章
+
+[js设计模式之发布-订阅模式](https://juejin.im/post/5c44236be51d4511dc72db58)
