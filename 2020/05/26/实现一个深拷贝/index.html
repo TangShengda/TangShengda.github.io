@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="算法 深拷贝 JS JS基础 面试题 进阶," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="一.JS如何有什么办法可以实现深拷贝？每个方法会有什么问题？可以通过JSO.stringify和JSON.parse方法这是JS实现深拷贝最简单的方法了，原理就是先将对象转换为字符串，再通过JSON.parse重新建立一个对象。 但是这种方法会存在属性丢失的问题  undefined、symbol 和函数这三种情况，会直接忽略，正则会被转换为空对象 123456789101112let obj &amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实现一个深拷贝">
+<meta property="og:url" content="http://yoursite.com/2020/05/26/%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E6%B7%B1%E6%8B%B7%E8%B4%9D/index.html">
+<meta property="og:site_name" content="小简单灬的博客">
+<meta property="og:description" content="一.JS如何有什么办法可以实现深拷贝？每个方法会有什么问题？可以通过JSO.stringify和JSON.parse方法这是JS实现深拷贝最简单的方法了，原理就是先将对象转换为字符串，再通过JSON.parse重新建立一个对象。 但是这种方法会存在属性丢失的问题  undefined、symbol 和函数这三种情况，会直接忽略，正则会被转换为空对象 123456789101112let obj &amp;">
+<meta property="og:image" content="https://fdfs.xmcdn.com/group79/M07/74/E6/wKgPC17M9dbCDB3EAABNoIa052U513.png">
+<meta property="og:image" content="https://fdfs.xmcdn.com/group80/M04/6C/FF/wKgPDF7NA7vQXSqPAAEsBhCgVfg210.jpg">
+<meta property="og:image" content="https://fdfs.xmcdn.com/group80/M02/6D/A2/wKgPDF7NBt6AIn1LAAB1dLRGuhg559.jpg">
+<meta property="article:published_time" content="2020-05-26T10:25:59.000Z">
+<meta property="article:modified_time" content="2020-05-28T02:40:08.341Z">
+<meta property="article:author" content="Tony Tang">
+<meta property="article:tag" content="算法 深拷贝 JS JS基础 面试题 进阶">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fdfs.xmcdn.com/group79/M07/74/E6/wKgPC17M9dbCDB3EAABNoIa052U513.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/05/26/实现一个深拷贝/"/>
+
+
+
+
+
+  <title>实现一个深拷贝 | 小简单灬的博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小简单灬的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一起加油，一路同行</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E6%B7%B1%E6%8B%B7%E8%B4%9D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tony Tang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小简单灬的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">实现一个深拷贝</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-26T18:25:59+08:00">
+                2020-05-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="一-JS如何有什么办法可以实现深拷贝？每个方法会有什么问题？"><a href="#一-JS如何有什么办法可以实现深拷贝？每个方法会有什么问题？" class="headerlink" title="一.JS如何有什么办法可以实现深拷贝？每个方法会有什么问题？"></a>一.JS如何有什么办法可以实现深拷贝？每个方法会有什么问题？</h1><h2 id="可以通过JSO-stringify和JSON-parse方法"><a href="#可以通过JSO-stringify和JSON-parse方法" class="headerlink" title="可以通过JSO.stringify和JSON.parse方法"></a>可以通过JSO.stringify和JSON.parse方法</h2><p>这是JS实现深拷贝最简单的方法了，原理就是先将对象转换为字符串，再通过JSON.parse重新建立一个对象。 但是这种方法会存在属性丢失的问题</p>
+<ul>
+<li><p><strong>undefined、symbol 和函数这三种情况，会直接忽略，正则会被转换为空对象</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">let obj &#x3D; &#123;</span><br><span class="line">  a: &#39;哈哈哈&#39;,</span><br><span class="line">  b: function()&#123;&#125;,</span><br><span class="line">  c: () &#x3D;&gt; &#123;&#125;,</span><br><span class="line">  d: Symbol(&#39;foo&#39;),</span><br><span class="line">  e: new RegExp(&#39;ab+c&#39;),</span><br><span class="line">  f: undefind</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const newObj &#x3D; JSON.parse(JSON.stringify(obj))</span><br><span class="line"></span><br><span class="line">console.log(newObj)</span><br></pre></td></tr></table></figure>
+
+<p>运行结果:</p>
+<p><img src="https://fdfs.xmcdn.com/group79/M07/74/E6/wKgPC17M9dbCDB3EAABNoIa052U513.png" alt="运行结果"></p>
+<p>可以看到，函数、正则、Symbol，undefind都没有被正确的复制。</p>
+</li>
+<li><p><strong>循环引用情况下，会报错</strong></p>
+<p>再看如下代码，如果在JSON.stringify中传入一个循环引用的对象，那么会直接报错：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">let objA &#x3D; &#123;</span><br><span class="line">  name: &#39;this is a&#39;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">let objB &#x3D; &#123;</span><br><span class="line">  name: &#39;this is b&#39;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">objA.child &#x3D; objB</span><br><span class="line">objB.parent &#x3D; objA</span><br><span class="line"></span><br><span class="line">console.log(JSON.parse(JSON.stringify(objA)))</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://fdfs.xmcdn.com/group80/M04/6C/FF/wKgPDF7NA7vQXSqPAAEsBhCgVfg210.jpg" alt="运行结果"></p>
+</li>
+<li><p><strong>相同的引用会被重复复制</strong></p>
+<p>看如下代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">let obj &#x3D; &#123; name: &#39;TSD&#39; &#125;</span><br><span class="line"></span><br><span class="line">let objA &#x3D; &#123; age: 18 &#125;</span><br><span class="line"></span><br><span class="line">obj.age &#x3D; objA</span><br><span class="line">obj.age2 &#x3D; objA</span><br><span class="line"></span><br><span class="line">const newObj &#x3D; JSON.parse(JSON.stringify(obj))</span><br><span class="line"></span><br><span class="line">obj.age.age &#x3D; 22</span><br><span class="line">newObj.age.age &#x3D; 30</span><br><span class="line"></span><br><span class="line">console.log(&#39;原对象&#39;, obj)</span><br><span class="line"></span><br><span class="line">console.log(&#39;新对象&#39;, newObj.age, newObj.age2)</span><br></pre></td></tr></table></figure>
+
+<p>结果如下:</p>
+<p><img src="https://fdfs.xmcdn.com/group80/M02/6D/A2/wKgPDF7NBt6AIn1LAAB1dLRGuhg559.jpg" alt="运行结果"></p>
+<p>我们看到原对象改变age后，age2也得到了改变。但是复制对象没有保持和源对象一样的结构，所以JSON实现深拷贝不能处理指向相同引用的情况，相同的引用会被重复复制。</p>
+</li>
+</ul>
+<ul>
+<li><p><strong>new Date 情况下，转换结果不正确</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">const date &#x3D; new Date() </span><br><span class="line">&#x2F;&#x2F; Tue May 26 2020 20:44:32 GMT+0800 (中国标准时间)</span><br><span class="line"></span><br><span class="line">JSON.stringify(date) </span><br><span class="line">&#x2F;&#x2F; &quot;&quot;2020-05-26T12:44:32.869Z&quot;&quot;</span><br><span class="line"></span><br><span class="line">JSON.parse(JSON.stringify(date)) </span><br><span class="line">&#x2F;&#x2F; &quot;2020-05-26T12:44:32.869Z&quot;</span><br></pre></td></tr></table></figure>
+
+<p>解决方法是直接转换成时间戳</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const date &#x3D; new Date().valueOf() &#x2F;&#x2F; 1590497484613</span><br><span class="line"></span><br><span class="line">JSON.stringify(date) &#x2F;&#x2F; &quot;1590497484613&quot;</span><br><span class="line"></span><br><span class="line">JSON.parse(JSON.stringify(date)) &#x2F;&#x2F; 1590497484613</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h1 id="二-使用原生JS去实现一个深拷贝"><a href="#二-使用原生JS去实现一个深拷贝" class="headerlink" title="二.使用原生JS去实现一个深拷贝"></a>二.使用原生JS去实现一个深拷贝</h1><h2 id="深拷贝主要可以分为2步，浅拷贝与递归，浅拷贝时判断属性是否是对象，如果是对象，则进行递归"><a href="#深拷贝主要可以分为2步，浅拷贝与递归，浅拷贝时判断属性是否是对象，如果是对象，则进行递归" class="headerlink" title="深拷贝主要可以分为2步，浅拷贝与递归，浅拷贝时判断属性是否是对象，如果是对象，则进行递归"></a>深拷贝主要可以分为2步，浅拷贝与递归，浅拷贝时判断属性是否是对象，如果是对象，则进行递归</h2><p>  <strong>第一步 先实现浅拷贝</strong></p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">const cloneDeep &#x3D; (o) &#x3D;&gt; &#123;</span><br><span class="line"></span><br><span class="line">  let target &#x3D; &#123;&#125;</span><br><span class="line"></span><br><span class="line">  for (const key in o) &#123;</span><br><span class="line">    if (Object.prototype.hasOwnProperty.call(o, key)) &#123;</span><br><span class="line">      console.log(key)</span><br><span class="line">      target[key] &#x3D; o[key]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return target</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>  <strong>第二步 加上是否是对象的判断并在相应的位置使用递归就可以实现简单深拷贝</strong></p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">const cloneDeep &#x3D; (o) &#x3D;&gt; &#123;</span><br><span class="line"></span><br><span class="line">  let target &#x3D; &#123;&#125;</span><br><span class="line"></span><br><span class="line">  for (const key in o) &#123;</span><br><span class="line">    if (Object.prototype.hasOwnProperty.call(o, key)) &#123;</span><br><span class="line">      if (isObject(o[key])) &#123;</span><br><span class="line">        target[key] &#x3D; cloneDeep(o[key])</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        target[key] &#x3D; o[key]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return target</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 判断是否是对象</span><br><span class="line">const isObject &#x3D; (obj) &#x3D;&gt; &#123;</span><br><span class="line">  return typeof obj &#x3D;&#x3D;&#x3D; &#39;object&#39;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>  到这里，一个简单的深拷贝已经完成了，但是依然存在很多问题</p>
+<ul>
+<li>没有对传入参数进行校验，传入 null 时应该返回 null 而不是 {}</li>
+<li>对于对象的判断逻辑不严谨，因为 typeof null === ‘object’</li>
+<li>没有考虑数组的兼容</li>
+</ul>
+<p><strong>第三步 拷贝数组</strong></p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">const cloneDeep &#x3D; (o, hash &#x3D; new WeakMap()) &#x3D;&gt; &#123;</span><br><span class="line">  if (!isObject(o)) return o</span><br><span class="line"></span><br><span class="line">  const target &#x3D; Array.isArray(o) ? [] : &#123;&#125; &#x2F;&#x2F; 新增代码</span><br><span class="line"></span><br><span class="line">  for (const key in o) &#123;</span><br><span class="line">    if (Object.prototype.hasOwnProperty.call(o, key)) &#123;</span><br><span class="line">      if (isObject(o[key])) &#123;</span><br><span class="line">        target[key] &#x3D; cloneDeep(o[key])</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        target[key] &#x3D; o[key]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return target</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 判断是否是对象</span><br><span class="line">const isObject &#x3D; (obj) &#x3D;&gt; &#123;</span><br><span class="line">  return typeof obj &#x3D;&#x3D;&#x3D; &#39;object&#39; &amp;&amp; obj !&#x3D;&#x3D; null</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>  <strong>第四步 循环应用处理</strong></p>
+<p>  其实解决办法很简单，我们设置一个数组或者哈希表存储已经拷贝过的对象，当检测到当前对象已存在于哈希表中时，取出值返回即可，顺便还解决了引用丢失的问题</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">const cloneDeep &#x3D; (o, hash &#x3D; new WeakMap()) &#x3D;&gt; &#123;</span><br><span class="line"></span><br><span class="line">  if (!isObject(o)) return o</span><br><span class="line">  if (hash.has(o)) return hash.get(o) &#x2F;&#x2F; 新增代码</span><br><span class="line"></span><br><span class="line">  const target &#x3D; Array.isArray(o) ? [] : &#123;&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  hash.set(o, target) &#x2F;&#x2F; 新增代码</span><br><span class="line"></span><br><span class="line">  for (const key in o) &#123;</span><br><span class="line">    if (Object.prototype.hasOwnProperty.call(o, key)) &#123;</span><br><span class="line">      if (isObject(o[key])) &#123;</span><br><span class="line">        target[key] &#x3D; cloneDeep(o[key], hash) &#x2F;&#x2F; 新增代码</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        target[key] &#x3D; o[key]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return target</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 判断是否是对象</span><br><span class="line">const isObject &#x3D; (obj) &#x3D;&gt; &#123;</span><br><span class="line">  return typeof obj &#x3D;&#x3D;&#x3D; &#39;object&#39; &amp;&amp; obj !&#x3D;&#x3D; null</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>  使用数组<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">const cloneDeep &#x3D; (o, uniqueList &#x3D; []) &#x3D;&gt; &#123;</span><br><span class="line">  if (!isObject(o)) return o</span><br><span class="line"></span><br><span class="line">  const target &#x3D; Array.isArray(o) ? [] : &#123;&#125;</span><br><span class="line"></span><br><span class="line">  const uniqueData &#x3D; find(uniqueList, o)</span><br><span class="line">  if (uniqueData) &#123;</span><br><span class="line">    return uniqueData.target</span><br><span class="line">  &#125;</span><br><span class="line">  uniqueList.push(&#123;</span><br><span class="line">    source: o,</span><br><span class="line">    target</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  for (const key in o) &#123;</span><br><span class="line">    if (Object.prototype.hasOwnProperty.call(o, key)) &#123;</span><br><span class="line">      if (isObject(o[key])) &#123;</span><br><span class="line">        target[key] &#x3D; cloneDeep(o[key],uniqueList)  &#x2F;&#x2F; 新增代码</span><br><span class="line">        console.log(target)</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        target[key] &#x3D; o[key]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return target</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const find &#x3D; (arr, source) &#x3D;&gt; &#123;</span><br><span class="line">  for (const item of arr) &#123;</span><br><span class="line">    if (item.source &#x3D;&#x3D;&#x3D; source) return item</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 判断是否是对象</span><br><span class="line">const isObject &#x3D; (obj) &#x3D;&gt; &#123;</span><br><span class="line">  return typeof obj &#x3D;&#x3D;&#x3D; &#39;object&#39; &amp;&amp; obj !&#x3D;&#x3D; null</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>  <strong>第五步 拷贝Symbol</strong></p>
+<p>  我们可以Symbol类型吗？当然可以。Symbol是ES6才有的类型，我们需要一些方法来检测Symbol类型</p>
+<ul>
+<li>方法一：Object.getOwnPropertySymbols(…)</li>
+<li>方法二：Reflect.ownKeys(…)</li>
+</ul>
+<p>  方法一思路是，先查找一下有没有Symbol属性，如果查找到则先遍历处理 Symbol 情况，然后再处理正常情况，多出来的逻辑就是下面的新增代码。</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">  const cloneDeep &#x3D; (o, hash &#x3D; new WeakMap()) &#x3D;&gt; &#123;</span><br><span class="line"></span><br><span class="line">  if (!isObject(o)) return o</span><br><span class="line">  if (hash.has(o)) return hash.get(o)</span><br><span class="line"></span><br><span class="line">  const target &#x3D; Array.isArray(o) ? [] : &#123;&#125;</span><br><span class="line"></span><br><span class="line">  hash.set(o, target)</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F; 新增代码</span><br><span class="line">  let symbolKeys &#x3D; Object.getOwnPropertySymbols(o)</span><br><span class="line">  if (symbolKeys.length &gt;&#x3D; 0) &#123;</span><br><span class="line">    symbolKeys.forEach((symbolKey, index) &#x3D;&gt; &#123;</span><br><span class="line">      if (isObject(o[symbolKey])) &#123;</span><br><span class="line">        target[symbolKey] &#x3D; cloneDeep(o[symbolKey], hash)</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        target[symbolKey] &#x3D; o[symbolKey]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  for (const key in o) &#123;</span><br><span class="line">    if (Object.prototype.hasOwnProperty.call(o, key)) &#123;</span><br><span class="line">      if (isObject(o[key])) &#123;</span><br><span class="line">        target[key] &#x3D; cloneDeep(o[key], hash)</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        target[key] &#x3D; o[key]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return target</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 判断是否是对象</span><br><span class="line">const isObject &#x3D; (obj) &#x3D;&gt; &#123;</span><br><span class="line">  return typeof obj &#x3D;&#x3D;&#x3D; &#39;object&#39; &amp;&amp; obj !&#x3D;&#x3D; null</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>  方法二: 这里使用了 Reflect.ownKeys() 获取所有的键值，同时包括 Symbol，对 source 遍历赋值即可。<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">const cloneDeep &#x3D; (o, hash &#x3D; new WeakMap()) &#x3D;&gt; &#123;</span><br><span class="line">  if (!isObject(o)) return o</span><br><span class="line">  if (hash.has(o)) return hash.get(o)</span><br><span class="line"></span><br><span class="line">  const target &#x3D; Array.isArray(o) ? [] : &#123;&#125;</span><br><span class="line"></span><br><span class="line">  hash.set(o, target)</span><br><span class="line"></span><br><span class="line">  Reflect.ownKeys(o).forEach((key) &#x3D;&gt; &#123;</span><br><span class="line">    if (isObject(o[key])) &#123;</span><br><span class="line">      target[key] &#x3D; cloneDeep(o[key])</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      target[key] &#x3D; o[key]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  return target</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 判断是否是对象</span><br><span class="line">const isObject &#x3D; (obj) &#x3D;&gt; &#123;</span><br><span class="line">  return typeof obj &#x3D;&#x3D;&#x3D; &#39;object&#39; &amp;&amp; obj !&#x3D;&#x3D; null</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>  Reflect.ownKeys() 这种方式的问题在于不能深拷贝原型链上的数据，因为返回的是目标对象自身的属性键组成的数组。如果想深拷贝原型链上的数据怎么办，那用 for..in 就可以了。</p>
+<p>  <strong>第五步 破解递归爆栈</strong></p>
+<p>  上面使用的都是递归方法，但是有一个问题在于会爆栈，错误提示如下。</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; RangeError: Maximum call stack size exceeded</span><br></pre></td></tr></table></figure>
+
+<p>  其实使用循环就可以了，有的面试官可能会问，实现一个不用递归版本的深克隆</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">  const cloneDeep &#x3D; (o) &#x3D;&gt; &#123;</span><br><span class="line">  const root &#x3D; &#123;&#125;</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F; 栈</span><br><span class="line">  const loopList &#x3D; [&#123;</span><br><span class="line">    parent: root,</span><br><span class="line">    key: undefined,</span><br><span class="line">    data: o</span><br><span class="line">  &#125;]</span><br><span class="line"></span><br><span class="line">  while (loopList.length) &#123;</span><br><span class="line">    const node &#x3D; loopList.pop()</span><br><span class="line">    const &#123; parent, key, data &#125; &#x3D; node</span><br><span class="line"></span><br><span class="line">    let res &#x3D; parent</span><br><span class="line">    if (typeof key !&#x3D;&#x3D; &#39;undefined&#39;) &#123;</span><br><span class="line">      parent[key] &#x3D; &#123;&#125;</span><br><span class="line">      res &#x3D; parent[key]</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for (const k in data) &#123;</span><br><span class="line">      if (data.hasOwnProperty(k)) &#123;</span><br><span class="line">        if (isObject(data[k])) &#123;</span><br><span class="line">          loopList.push(&#123;</span><br><span class="line">            parent: res,</span><br><span class="line">            key: k,</span><br><span class="line">            data: data[k]</span><br><span class="line">          &#125;)</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">          res[k] &#x3D; data[k]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return root</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E7%AE%97%E6%B3%95-%E6%B7%B1%E6%8B%B7%E8%B4%9D-JS-JS%E5%9F%BA%E7%A1%80-%E9%9D%A2%E8%AF%95%E9%A2%98-%E8%BF%9B%E9%98%B6/" rel="tag"># 算法 深拷贝 JS JS基础 面试题 进阶</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/28/js%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85/" rel="prev" title="js实现一个发布订阅">
+                js实现一个发布订阅 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Tony Tang" />
+          <p class="site-author-name" itemprop="name">Tony Tang</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一-JS如何有什么办法可以实现深拷贝？每个方法会有什么问题？"><span class="nav-number">1.</span> <span class="nav-text">一.JS如何有什么办法可以实现深拷贝？每个方法会有什么问题？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#可以通过JSO-stringify和JSON-parse方法"><span class="nav-number">1.1.</span> <span class="nav-text">可以通过JSO.stringify和JSON.parse方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二-使用原生JS去实现一个深拷贝"><span class="nav-number">2.</span> <span class="nav-text">二.使用原生JS去实现一个深拷贝</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#深拷贝主要可以分为2步，浅拷贝与递归，浅拷贝时判断属性是否是对象，如果是对象，则进行递归"><span class="nav-number">2.1.</span> <span class="nav-text">深拷贝主要可以分为2步，浅拷贝与递归，浅拷贝时判断属性是否是对象，如果是对象，则进行递归</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tony Tang</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
