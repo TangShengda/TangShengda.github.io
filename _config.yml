@@ -1,9 +1,9 @@
 title: 小简单灬的博客
-subtitle: 一起加油，一路同行
+subtitle: 这个人很懒，什么都没留下
 description: ''
 keywords: 前端 技术 博客
 author: Tony Tang
-language: zh-Hans
+language: zh-CN
 timezone: ''
 url: http://yoursite.com
 root: /
@@ -55,7 +55,7 @@ pagination_dir: page
 include: null
 exclude: null
 ignore: null
-theme: icarus
+theme: butterfly
 deploy:
   type: git
   repository: https://github.com/TangShengda/TangShengda.github.io.git
